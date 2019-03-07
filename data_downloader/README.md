@@ -14,6 +14,14 @@ To run properly, the script needs to import the following packages:
 
 ## Execution
 
+Before running the program define the number of image you want to download (max 23906) and the number of images contained in each zip (max 300).
+
+Example:
+```python
+nr_images = '10'
+nr_imgs_in_zip = 3
+```
+
 To execute the downloader, type on the command line the following: 
 ```python
 python data_downloader.py
