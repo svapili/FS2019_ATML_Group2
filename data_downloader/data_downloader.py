@@ -1,8 +1,15 @@
-import numpy as np
 import requests
 import json
+import urllib.parse
 
-nr_images = '5'  # if you want to download all the images = 23906
+##################################
+# Modify only those 2 parameters #
+##################################
+
+nr_images = '10'  # if you want to download all the images = 23906
+nr_imgs_in_zip = 3  # cannot be higher than 300
+
+
 url = 'https://isic-archive.com/api/v1/'
 get_images_and_metadata_method = 'image?limit=' + nr_images + '&sort=name&sortdir=1&detail=true'
 
@@ -15,9 +22,11 @@ img_data = response.json()
 
 # data that is collected from each image
 img_ids = []
-img_name = []
-img_classification_tags = []
 all_data = []
+
+##########################################
+# write metadata on a separate json file #
+##########################################
 
 # loop over all the images and store the ids of the images, the name of the file and the tags (benign/malignant)
 for img in img_data:
@@ -27,32 +36,39 @@ for img in img_data:
 
     dict_object = dict(_id=id, name=name, benign_malignant=classification_tag)
     all_data.append(dict_object)
-    
-    
+    img_ids.append(id)
+
+# get a file object with write permission
+file_object = open('metadata.json', 'w')
+
+# store the information into a json file
+# Save dict data into the JSON file.
+json.dump(all_data, file_object)
+print('metadata.json created.')
+
+# close the object of the file
+file_object.close()
+
+
 ###########################
 # download all the images #
 ###########################
 
-for img in img_ids:
-    id = img['_id']
-    url_request_download = url + 'image/' + id + '/download'
+# creates chunks containing N image's ids
+chunks = [img_ids[x:x+nr_imgs_in_zip] for x in range(0, len(img_ids), nr_imgs_in_zip)]
+
+# creates zips containing N images
+for i in range(0, len(chunks)):
+    # convert the ids of the images into json string then into URL convention
+    json_string = json.dumps(chunks[i])
+    ids_str_url = urllib.parse.quote_plus(json_string)
+
+    # request to the API
+    url_request_download = url + 'image/download?include=images&imageIds=' + ids_str_url
     response_download = requests.get(url_request_download)
-    
-##########################################
-# write metadata on a separate json file #
-##########################################
-    
-# Get a file object with write permission.
-file_object = open('metadata.json', 'w')
 
-# store the information into a json file
-try:
-    # Save dict data into the JSON file.
-    json.dump(all_data, file_object)
-
-    print('metadata.json' + " created. ")    
-except FileNotFoundError:
-    print('metadata.json' + " not found. ") 
-    
-# close the object of the file
-file_object.close()
+    # creation of the zip
+    with open('img_' + "{:02d}".format(i) + '.zip', 'wb') as f:
+        f.write(response_download.content)
+        print('img_' + "{:02d}".format(i) + '.zip created.')
+    f.close()
