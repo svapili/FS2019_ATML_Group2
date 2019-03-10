@@ -28,11 +28,26 @@ all_data = []
 # write metadata on a separate json file #
 ##########################################
 
+def getImageClassificationTag(image):
+
+    try:
+        imageClassification = image['meta']['clinical']['benign_malignant']
+
+        if (imageClassification is None):
+            return "None"
+        else:
+            return imageClassification
+			
+    except Exception as e:
+	
+        print("Cannot extract the classification of image " + str(image['name']) + ":" + str(e))
+        return "_Fetch_Error_"
+
 # loop over all the images and store the ids of the images, the name of the file and the tags (benign/malignant)
 for img in img_data:
     id = img['_id']
     name = img['name']
-    classification_tag = img['meta']['clinical']['benign_malignant']
+    classification_tag = getImageClassificationTag(img)
 
     dict_object = dict(_id=id, name=name, benign_malignant=classification_tag)
     all_data.append(dict_object)
