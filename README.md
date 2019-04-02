@@ -1,7 +1,7 @@
 # Melanoma Classification
 
 ## Group members
-Nathan Gyger, Léonard Barras, Simon Schweizer
+Nathan Gyger, Léonard Barras
 
 ## Goal
 Implement a deep learning algorithm to classify mole pictures as benign or malignant using the [ISIC database](https://isic-archive.com/).
