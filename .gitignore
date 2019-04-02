@@ -99,3 +99,7 @@ ENV/
 
 # mypy
 .mypy_cache/
+
+# Melanoma detection project
+data/data_downloader/*.zip
+data/ISIC-images/*.jpg
