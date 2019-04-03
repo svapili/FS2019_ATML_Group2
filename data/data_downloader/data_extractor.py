@@ -77,14 +77,6 @@ file_object = open(move_dir + 'metadata.json', 'w')
 json.dump(new_metadata, file_object)
 print('metadata.json created.')
 file_object.close()
-    
-
-#################################
-## Copy metadata to extract_dir #
-#################################
-#print('Copying metadata...')
-#
-#shutil.copy(zip_file_dir + 'metadata.json', extract_dir + 'metadata.json')
 
 
 #################################
