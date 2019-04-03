@@ -1,15 +1,20 @@
 import glob
 import zipfile
 import shutil
+import sys
+import json
 from os import remove
 
 # Variables
-deleteZipFiles = False
+extractAllZipFiles = False # Set True to extract all zip files. Set False to extract only the first 3 zip files.
+deleteZipFiles = False # Set True to delete all zip files at the end
+deleteIntermediateFolder = True # Set True to delete intermediate folders at the end
 
 # Directories
 zip_file_dir = './'
-extract_dir = '../'
 move_dir = '../ISIC-images/'
+benign_dir = '../ISIC-images/benign/'
+malignant_dir = '../ISIC-images/malignant/'
 
 #####################
 # Extract zip files #
@@ -18,40 +23,78 @@ print('Unzipping files...')
 
 zip_file_list = glob.glob(zip_file_dir + 'img*.zip')
 
-for zip_file in zip_file_list:
-    print(zip_file)
-    zip_ref = zipfile.ZipFile(zip_file, 'r')
-    zip_ref.extractall(extract_dir)
-    zip_ref.close()
+if (extractAllZipFiles):
+    for zip_file in zip_file_list:
+        print(zip_file)
+        try:
+            zip_ref = zipfile.ZipFile(zip_file, 'r')
+            zip_ref.extractall(zip_file_dir)
+            zip_ref.close()
+        except Exception as e:
+            print("Error with " + zip_file + ": " + e.args[0])
+else:
+    for zip_file in zip_file_list[0:3]:
+        print(zip_file)
+        try:
+            zip_ref = zipfile.ZipFile(zip_file, 'r')
+            zip_ref.extractall(zip_file_dir)
+            zip_ref.close()
+        except Exception as e:
+            print("Error with " + zip_file + ": " + e.args[0])
 
-######################################
-# Move all images to the same folder #
-######################################
+
+#####################################################################
+# Move all images to benign or malignant folder and update metadata #
+#####################################################################
 print('Moving images...')
 
-img_path_list = glob.glob(extract_dir + '/ISIC-images/**/*.jpg')
+img_path_list = glob.glob(zip_file_dir + '/ISIC-images/**/*.jpg')
+
+with open(zip_file_dir + 'metadata.json') as f:
+    metadata = json.load(f)
+    
+new_metadata = []
 
 for img_path in img_path_list:
-    img_name = img_path.split('\\')[-1]
-    shutil.move(img_path, move_dir+img_name)
+    
+    img_name_format = img_path.split('\\')[-1]
+    img_name = img_name_format.split('.')[0]
+    
+    for data in metadata:
+        
+        # Check if image in metadata exists
+        if (data['name'] == img_name):
+            new_metadata.append(data)
+            
+            # Move image to corresponding directory
+            if (data['benign_malignant'] == 'benign'):
+                shutil.move(img_path, benign_dir+img_name_format)
+            elif (data['benign_malignant'] == 'malignant'):
+                shutil.move(img_path, malignant_dir+img_name_format)
 
-################################
-# Copy metadata to extract_dir #
-################################
-print('Copying metadata...')
+# Create new metadata file
+file_object = open(move_dir + 'metadata.json', 'w')
+json.dump(new_metadata, file_object)
+print('metadata.json created.')
+file_object.close()
+    
 
-shutil.copy(zip_file_dir + 'metadata.json', extract_dir + 'metadata.json')
+#################################
+## Copy metadata to extract_dir #
+#################################
+#print('Copying metadata...')
+#
+#shutil.copy(zip_file_dir + 'metadata.json', extract_dir + 'metadata.json')
+
 
 #################################
 # Deleting intermediate folders #
 #################################
-print('Deleting intermediate folders...')
-
-folder_list = glob.glob(extract_dir + '/ISIC-images/**/')
-
-for folder in folder_list:
-    shutil.rmtree(folder)
-
+if (deleteIntermediateFolder):
+    print('Deleting intermediate folders...')
+    
+    shutil.rmtree(zip_file_dir + '/ISIC-images/')
+    
 
 ######################
 # Deleting zip files #
