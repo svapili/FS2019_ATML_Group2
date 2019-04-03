@@ -103,3 +103,5 @@ ENV/
 # Melanoma detection project
 data/data_downloader/*.zip
 data/ISIC-images/*.jpg
+data/ISIC-images/benign/*.jpg
+data/ISIC-images/malignant/*.jpg
