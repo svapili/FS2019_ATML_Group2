@@ -4,16 +4,22 @@ import torchvision.transforms
 import numpy as np
 import matplotlib.pyplot as plt
 from dataset import MelanomaDataset
+import util
+import glob
 
 # Directories
 metadata_path = '../data/metadata.json'
 images_path = '../data/ISIC-images/'
 
-# Dataset loading
-melanoma_dataset = MelanomaDataset(images_path, metadata_path)
+if __name__ == '__main__':
 
-# Testing dataset class
-sample_idx = 20
-fig = plt.figure()
-plt.title(melanoma_dataset[sample_idx]['classification'])
-plt.imshow(melanoma_dataset[sample_idx]['image'])
+    # Dataset loading
+    melanoma_dataset = MelanomaDataset(images_path, metadata_path)
+    
+    # Testing dataset class
+    util.showSamples(melanoma_dataset)
+    
+    
+    # TODO: data augmentation for class malignant
+    # TODO: split data into train, test and validation
+    # TODO: create dataloader
