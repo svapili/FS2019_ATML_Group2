@@ -10,32 +10,44 @@ import time
 import os
 import copy
 import util
-
-# Directories
-data_dir = '../data/ISIC-images/'
-
-def imshow(inp, title=None):
-    if title is not None:
-        plt.title(title)
-    plt.imshow(inp)
-    plt.pause(0.001) 
+from dataSplitter import split
+from loader import melanomaDataLoader, showSample
 
 if __name__ == '__main__':
     
-    image_dataset = datasets.ImageFolder(data_dir)
-    dataloader = torch.utils.data.DataLoader(image_dataset, batch_size=4,
-                                                 shuffle=True, num_workers=4)
+    # Directories
+    dataDir = '../data/ISIC-images'
+
+    newDataSplit = False # Set to true to split the data randomly again. Data have first to be downloaded and extracted with data_extractor.py
+
+######################
+# Splitting the data #
+######################
+    if (newDataSplit):
+        
+        trainDir = '../data/ISIC-images/train/'
+        testDir = '../data/ISIC-images/test/'
+        valDir = '../data/ISIC-images/val/'
+
+        testRatio = .1
+        valRatio = .1
+        
+        split(trainDir, testDir, valDir, testRatio, valRatio)
+        
+##############################
+# Creating DataLoader object #
+##############################
+# Based on https://pytorch.org/tutorials/beginner/transfer_learning_tutorial.html
     
-    dataset_sizes = len(image_dataset)
-    class_names = image_dataset.classes
+    image_datasets, dataloaders = melanomaDataLoader(dataDir)
     
-    device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+    dataset_sizes = {x: len(image_datasets[x]) for x in ['train', 'test', 'val']}
+    class_names = image_datasets['train'].classes
     
-    # NOT WORKING YET - TypeError
-#    inputs = next(iter(dataloader))
-#    out = torchvision.utils.make_grid(inputs)
-#    util.imshow(out)
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+        
+    # NOT WORKING YET - Dimension error
+    #showSample(dataloaders, class_names)
     
     # TODO: show sample images using dataloader
-    # TODO: split data into train, test and validation
     # TODO: data augmentation for class malignant
