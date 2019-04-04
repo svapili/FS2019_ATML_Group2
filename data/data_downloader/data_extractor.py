@@ -3,6 +3,7 @@ import zipfile
 import shutil
 import sys
 import json
+import os
 from os import remove
 
 # Variables
@@ -12,9 +13,23 @@ deleteIntermediateFolder = True # Set True to delete intermediate folders at the
 
 # Directories
 zip_file_dir = './'
-move_dir = '../ISIC-images/'
-benign_dir = '../ISIC-images/benign/'
-malignant_dir = '../ISIC-images/malignant/'
+image_dir = '../ISIC-images/'
+move_dir = '../ISIC-images/train/'
+benign_dir = '../ISIC-images/train/benign/'
+malignant_dir = '../ISIC-images/train/malignant/'
+
+
+#######################################
+# Create folders #
+#######################################
+if not os.path.exists(image_dir):
+    os.makedirs(image_dir)
+if not os.path.exists(move_dir):
+    os.makedirs(move_dir)    
+if not os.path.exists(benign_dir):
+    os.makedirs(benign_dir)
+if not os.path.exists(malignant_dir):
+    os.makedirs(malignant_dir)
 
 #####################
 # Extract zip files #
@@ -41,7 +56,6 @@ else:
             zip_ref.close()
         except Exception as e:
             print("Error with " + zip_file + ": " + e.args[0])
-
 
 #####################################################################
 # Move all images to benign or malignant folder and update metadata #
@@ -73,7 +87,7 @@ for img_path in img_path_list:
                 shutil.move(img_path, malignant_dir+img_name_format)
 
 # Create new metadata file
-file_object = open(move_dir + 'metadata.json', 'w')
+file_object = open(image_dir + 'metadata.json', 'w')
 json.dump(new_metadata, file_object)
 print('metadata.json created.')
 file_object.close()
