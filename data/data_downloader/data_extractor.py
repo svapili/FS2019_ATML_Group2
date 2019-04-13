@@ -5,6 +5,13 @@ import sys
 import json
 import os
 from os import remove
+import platform
+
+Linux = False
+
+if platform.platform()[0:5] == 'Linux':
+    Linux = True
+
 
 # Variables
 extractAllZipFiles = True # Set True to extract all zip files. Set False to extract only the first 3 zip files.
@@ -70,8 +77,11 @@ with open(zip_file_dir + 'metadata.json') as f:
 new_metadata = []
 
 for img_path in img_path_list:
-    
-    img_name_format = img_path.split('\\')[-1]
+    if Linux:
+        img_name_format = img_path.split('/')[-1]
+    else:
+        img_name_format = img_path.split('\\')[-1]
+
     img_name = img_name_format.split('.')[0]
     
     for data in metadata:
