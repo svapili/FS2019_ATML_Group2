@@ -6,9 +6,9 @@ import urllib.parse
 # Modify only those 2 parameters #
 ##################################
 
-nr_images = '10'  # if you want to download all the images = 23906
+nr_images = '5000'  # if you want to download all the images = 23906
 offset_imgs = '0' # if you want to start downloading from a specific image
-nr_imgs_in_zip = 3  # cannot be higher than 300
+nr_imgs_in_zip = 20  # cannot be higher than 300
 
 
 url = 'https://isic-archive.com/api/v1/'
@@ -88,3 +88,6 @@ for i in range(0, len(chunks)):
         f.write(response_download.content)
         print('img_' + "{:02d}".format(i) + '.zip created.')
     f.close()
+
+
+print("end of script")

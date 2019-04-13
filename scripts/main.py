@@ -51,3 +51,27 @@ if __name__ == '__main__':
     
     # TODO: show sample images using dataloader
     # TODO: data augmentation for class malignant
+
+##############################
+# Configuring Network        #
+##############################
+
+    # Batch size and learning rate config
+    batch_size = 64
+    learning_rate = 0.001
+
+    model = SimpleNet()
+    model = model.to(device)
+
+    # optimizer definition
+    optimizer = torch.optim.SGD(model.parameters(), lr=learning_rate)
+
+    # loss function
+    loss_fn = nn.CrossEntropyLoss()
+
+    train_losses, train_accuracies = [], []
+    val_losses, val_accuracies = [], []
+
+    # test train and test function
+    train_loss, train_accuracy = train(model, dataloaders['train'], optimizer, loss_fn, device)
+    val_loss, val_accuracy = test_(model, dataloaders['val'], loss_fn, device

@@ -7,9 +7,9 @@ import os
 from os import remove
 
 # Variables
-extractAllZipFiles = False # Set True to extract all zip files. Set False to extract only the first 3 zip files.
+extractAllZipFiles = True # Set True to extract all zip files. Set False to extract only the first 3 zip files.
 deleteZipFiles = False # Set True to delete all zip files at the end
-deleteIntermediateFolder = True # Set True to delete intermediate folders at the end
+deleteIntermediateFolder = False# Set True to delete intermediate folders at the end
 
 # Directories
 zip_file_dir = './'
@@ -85,6 +85,8 @@ for img_path in img_path_list:
                 shutil.move(img_path, benign_dir+img_name_format)
             elif (data['benign_malignant'] == 'malignant'):
                 shutil.move(img_path, malignant_dir+img_name_format)
+            else:
+                print("---------")
 
 # Create new metadata file
 file_object = open(image_dir + 'metadata.json', 'w')
