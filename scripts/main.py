@@ -13,6 +13,11 @@ import util
 from dataSplitter import split
 from loader import melanomaDataLoader, showSample
 
+import SimpleNet
+import train
+import test_
+
+
 if __name__ == '__main__':
     
     # Directories
@@ -60,7 +65,7 @@ if __name__ == '__main__':
     batch_size = 64
     learning_rate = 0.001
 
-    model = SimpleNet()
+    model = SimpleNet.ConvNet()
     model = model.to(device)
 
     # optimizer definition
@@ -73,5 +78,5 @@ if __name__ == '__main__':
     val_losses, val_accuracies = [], []
 
     # test train and test function
-    train_loss, train_accuracy = train(model, dataloaders['train'], optimizer, loss_fn, device)
-    val_loss, val_accuracy = test_(model, dataloaders['val'], loss_fn, device
+    train_loss, train_accuracy = train.train(model, dataloaders['train'], optimizer, loss_fn, device)
+    val_loss, val_accuracy = test_.test(model, dataloaders['val'], loss_fn, device)

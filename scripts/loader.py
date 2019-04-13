@@ -6,22 +6,30 @@ from torchvision import datasets, transforms
 def melanomaDataLoader(dataDir):
     data_transforms = {
         'train': transforms.Compose([
+            transforms.Resize(256),
             transforms.ToTensor(),
+            transforms.Normalize(mean=(0.5, 0.5, 0.5), std=(0.5, 0.5, 0.5))
         ]),
         'test': transforms.Compose([
+            transforms.Resize(256),
             transforms.ToTensor(),
+            transforms.Normalize(mean=(0.5, 0.5, 0.5), std=(0.5, 0.5, 0.5))
         ]),
         'val': transforms.Compose([
+            transforms.Resize(256),
             transforms.ToTensor(),
+            transforms.Normalize(mean=(0.5, 0.5, 0.5), std=(0.5, 0.5, 0.5))
         ]),
     }
     
     image_datasets = {x: datasets.ImageFolder(os.path.join(dataDir, x),
                                           data_transforms[x])
+
                   for x in ['train', 'test', 'val']}
     
     dataloaders = {x: torch.utils.data.DataLoader(image_datasets[x], batch_size=4,
                                                  shuffle=True, num_workers=4)
+
                   for x in ['train', 'test', 'val']}
     
     return image_datasets, dataloaders

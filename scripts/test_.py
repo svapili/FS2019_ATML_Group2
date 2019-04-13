@@ -1,7 +1,7 @@
 import torch
 
 # Define testing function
-def test_(model, test_loader, loss_fn, device):
+def test(model, test_loader, loss_fn, device):
     '''
     Tests the model on data from test_loader
     '''

@@ -28,6 +28,10 @@ import os, os.path
 import glob
 import numpy as np
 import shutil
+import platform
+
+if platform.platform()[0:5] == 'Linux':
+    Linux = True
 
 # Create directory structure and puts all images in the train folder if they
 # were already split.
@@ -54,7 +58,11 @@ def initDir(trainDir, testDir, valDir):
                     imgList = glob.glob(newPath + subDir + '*.jpg')
                     for img in imgList:
                         src = img
-                        dest = newPath.rsplit('/',2)[0] + '/train/' + subDir + img.split('\\')[-1]
+                        if Linux:
+                            dest = newPath.rsplit('/',2)[0] + '/train/' + subDir + img.split('/')[-1]
+                        else:
+                            dest = newPath.rsplit('/',2)[0] + '/train/' + subDir + img.split('\\')[-1]
+
                         shutil.move(src, dest)
 
 # Print image count in each of the directories                      
@@ -90,7 +98,11 @@ def getSplitIndices(setLength, ratio, randomSeed):
 def moveImages(moveDir, indices, imgList):
     for idx in indices:
         src = imgList[idx]
-        dest = moveDir + imgList[idx].split('\\')[-1]
+        if Linux:
+            dest = moveDir + imgList[idx].split('/')[-1]
+        else:
+            dest = moveDir + imgList[idx].split('\\')[-1]
+
         shutil.move(src, dest)
         
 # Split the train set into a train and test sets according to a given ratio
