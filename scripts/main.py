@@ -51,10 +51,8 @@ if __name__ == '__main__':
     
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
         
-    # NOT WORKING YET - Dimension error
-    #showSample(dataloaders, class_names)
+    showSample(dataloaders, dataset_sizes, class_names)
     
-    # TODO: show sample images using dataloader
     # TODO: data augmentation for class malignant
 
 ##############################
