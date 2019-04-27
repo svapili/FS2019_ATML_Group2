@@ -1,33 +1,47 @@
 import os
 import torch
 import torchvision
-from torchvision import datasets, transforms
+from torchvision import transforms
 import matplotlib.pyplot as plt
 import numpy as np
+from dataset import MelanomaDataset
 
 
 # Create dataset and dataloader objects
 def melanomaDataLoader(dataDir):
+    
+    #TODO: normalize data    
     data_transforms = {
         'train': transforms.Compose([
-            #transforms.Resize(256),
+            transforms.Resize((300,300)),
             transforms.ToTensor(),
-            #transforms.Normalize(mean=(0.5, 0.5, 0.5), std=(0.5, 0.5, 0.5))
         ]),
         'test': transforms.Compose([
-            #transforms.Resize(256),
+            transforms.Resize((300,300)),
             transforms.ToTensor(),
-            #transforms.Normalize(mean=(0.5, 0.5, 0.5), std=(0.5, 0.5, 0.5))
         ]),
         'val': transforms.Compose([
-            #transforms.Resize(256),
+            transforms.Resize((300,300)),
             transforms.ToTensor(),
-            #transforms.Normalize(mean=(0.5, 0.5, 0.5), std=(0.5, 0.5, 0.5))
         ]),
     }
     
-    image_datasets = {x: datasets.ImageFolder(os.path.join(dataDir, x),
-                                          data_transforms[x])
+    # TODO: add more augmentation transforms
+    malignant_augmentation = {
+        'train': transforms.Compose([
+            transforms.RandomHorizontalFlip(p=1.0)
+        ]),
+        'test': transforms.Compose([
+            
+        ]),
+        'val': transforms.Compose([
+          
+        ]),
+    }
+    
+    image_datasets = {x: MelanomaDataset(os.path.join(dataDir, x),
+                                          data_transforms[x],
+                                          malignant_augmentation[x])
 
                   for x in ['train', 'test', 'val']}
     
@@ -42,6 +56,8 @@ def melanomaDataLoader(dataDir):
 # Display some sample pictures
 def showSample(dataloaders, dataset_sizes, class_names):
     
+    plt.figure()
+    
     for i in range(0, 10):
         
         # Get random image in training set
@@ -50,7 +66,7 @@ def showSample(dataloaders, dataset_sizes, class_names):
         imgClass =  dataloaders['train'].dataset[index][1]
         
         # Transform image before display
-        img = img.numpy().transpose(1,2,0)
+        #img = img.numpy().transpose(1,2,0)
         
         # Display image
         plt.subplot(2,5,i+1)

@@ -53,8 +53,6 @@ if __name__ == '__main__':
         
     showSample(dataloaders, dataset_sizes, class_names)
     
-    # TODO: data augmentation for class malignant
-
 ##############################
 # Configuring Network        #
 ##############################
