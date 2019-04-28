@@ -9,6 +9,11 @@ def train(model, train_loader, optimizer, loss_fn, device, print_every=100):
         images = images.to(device)
         labels = labels.to(device)
         output = model(images)
+        '''
+        print(train_loader.batch_size)
+        print(labels.size())
+        print(output.shape)
+        '''
         optimizer.zero_grad()
         loss = loss_fn(output, labels)
         loss.backward()
