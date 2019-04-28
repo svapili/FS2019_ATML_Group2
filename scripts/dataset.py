@@ -40,13 +40,13 @@ class MelanomaDataset(datasets.ImageFolder):
 
     Args:
         root (string): Root directory path.
-        transform (callable, optional): A function/transform that  takes in an PIL image
-            and returns a transformed version. E.g, ``transforms.Resize``
+        resize_transform (callable, optional): A function/transform that  takes in an PIL image
+            and returns a resized version. E.g., ``transforms.Resize``
         class1_augmentation(callable, optional): A function/transform that takes in a PIL
             image and does data augmentation on the data belonging to class with index 1. 
             E.g. ``transform.RandomCrop``
-        target_transform (callable, optional): A function/transform that takes in the
-            target and transforms it.
+        tensor_transform (callable, optional): A function/transform that  takes in an PIL image
+            and returns a transformed version of type torch.Tensor. E.g, ``transforms.ToTensor``
         loader (callable, optional): A function to load an image given its path.
 
      Attributes:
@@ -54,14 +54,17 @@ class MelanomaDataset(datasets.ImageFolder):
         class_to_idx (dict): Dict with items (class_name, class_index).
         imgs (list): List of (image path, class_index) tuples
     """
-    def __init__(self, root, transform=None, 
+    def __init__(self, root, 
+                 resize_transform=None, 
                  class1_augmentation = None,
-                 target_transform=None,
+                 tensor_transform=None,
                  loader=default_loader):
-        super(MelanomaDataset, self).__init__(root, transform=transform,
-                                          target_transform=target_transform,
+        super(MelanomaDataset, self).__init__(root, transform=None,
+                                          target_transform=None,
                                           loader=default_loader)
+        self.resize_transform = resize_transform
         self.class1_augmentation = class1_augmentation
+        self.tensor_transform = tensor_transform
         
     def __getitem__(self, index):
         """
@@ -73,13 +76,17 @@ class MelanomaDataset(datasets.ImageFolder):
         """
         path, target = self.samples[index]
         sample = self.loader(path)
-        if self.transform is not None:
-            sample = self.transform(sample)
+        
+        if self.resize_transform is not None:
+            sample = self.resize_transform(sample)
         if self.class1_augmentation is not None:
             if target == 1: # '1' is malignant, '0' is benign
-                sample = self.class1_augmentation(transforms.ToPILImage()(sample))
-            else:
-                sample = transforms.ToPILImage()(sample)
+                sample = self.class1_augmentation(sample)
+        if self.tensor_transform is not None:
+            sample = self.tensor_transform(sample)
+        
+        if self.transform is not None:
+            sample = self.transform(sample)
         if self.target_transform is not None:
             target = self.target_transform(target)
         
