@@ -10,11 +10,11 @@ class ConvNet(nn.Module):
         self.pool = nn.MaxPool2d(kernel_size=2, stride=2, padding=0)
         self.conv2 = nn.Conv2d(18, 18, kernel_size=5, stride=1, padding=2)
         # 4608 input features, 64 output features (see sizing flow below)
-        self.fc1 = nn.Linear(18 * 8 * 8, 384)
+        self.fc1 = nn.Linear(405000, 384)
         self.drop = nn.Dropout2d(p=0.5)
         self.fc2 = nn.Linear(384, 192)
         # 64 input features, 10 output features for our 10 defined classes
-        self.fc3 = nn.Linear(192, 10)
+        self.fc3 = nn.Linear(192, 2)
 
     def forward(self, x):
         # Computes the activation of the first convolution
@@ -29,7 +29,7 @@ class ConvNet(nn.Module):
         # Reshape data to input to the input layer of the neural net
         # Size changes from (18, 16, 16) to (1, 4608)
         # Recall that the -1 infers this dimension from the other given dimension
-        x = x.view(-1, 18 * 8 * 8)
+        x = x.view(-1, 405000)
         # Computes the activation of the first fully connected layer
         x = self.fc1(x)
         x = self.rrelu1(x)
