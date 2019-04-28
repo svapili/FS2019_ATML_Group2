@@ -57,8 +57,7 @@ if __name__ == '__main__':
 # Configuring Network        #
 ##############################
 
-    # Batch size and learning rate config
-    batch_size = 64
+    # Learning rate config
     learning_rate = 0.001
 
     model = SimpleNet.ConvNet()

@@ -28,6 +28,7 @@ def melanomaDataLoader(dataDir):
     
     # Define transforms on tensor type
     data_tensor_transform = transforms.Compose([
+
             transforms.ToTensor()
             # TODO: Normalize data
         ])
@@ -41,8 +42,8 @@ def melanomaDataLoader(dataDir):
                   for x in ['train', 'test', 'val']}
     
     # Create dataloader objects
-    dataloaders = {x: torch.utils.data.DataLoader(image_datasets[x], batch_size=4,
-                                                 shuffle=True, num_workers=4)
+    dataloaders = {x: torch.utils.data.DataLoader(image_datasets[x], batch_size=32,
+                                                 shuffle=True, num_workers=2)
 
                   for x in ['train', 'test', 'val']}
     
