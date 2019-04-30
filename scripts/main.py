@@ -12,6 +12,7 @@ import copy
 import util
 from dataSplitter import split
 from loader import melanomaDataLoader, showSample
+from dataAugmenter import preprocessData
 
 import SimpleNet
 import train
@@ -22,22 +23,30 @@ if __name__ == '__main__':
     
     # Directories
     dataDir = '../data/ISIC-images'
+    trainDir = '../data/ISIC-images/train/'
+    testDir = '../data/ISIC-images/test/'
+    valDir = '../data/ISIC-images/val/'
 
     newDataSplit = False # Set to true to split the data randomly again. Data have first to be downloaded and extracted with data_extractor.py
 
+    dataPreprocessing = True # Set to true to resize and augment the data
+    
 ######################
 # Splitting the data #
 ######################
     if (newDataSplit):
-        
-        trainDir = '../data/ISIC-images/train/'
-        testDir = '../data/ISIC-images/test/'
-        valDir = '../data/ISIC-images/val/'
 
         testRatio = .1
         valRatio = .1
         
         split(trainDir, testDir, valDir, testRatio, valRatio)
+        
+####################################################
+# Preprocessing the data (resizing and augmenting) #
+####################################################
+    if (dataPreprocessing):
+        
+        preprocessData([trainDir, testDir, valDir])
         
 ##############################
 # Creating DataLoader object #
