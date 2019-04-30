@@ -3,7 +3,6 @@ import torch
 from torchvision import transforms
 import matplotlib.pyplot as plt
 import numpy as np
-from dataset import MelanomaDataset
 from torchvision import datasets
 
 
