@@ -4,40 +4,18 @@ from torchvision import transforms
 import matplotlib.pyplot as plt
 import numpy as np
 from dataset import MelanomaDataset
+from torchvision import datasets
 
 
 # Create dataset and dataloader objects
 def melanomaDataLoader(dataDir):
     
-    # Define image size
-    data_resize_transform = transforms.Resize((300,300))
-    
-    # Define augmentation transform for the malignant data
-    malignant_data_augmentation = {
-        'train': transforms.Compose([
-            transforms.RandomHorizontalFlip(p=1.0)
-            # TODO: add more transforms
-        ]),
-        'test': transforms.Compose([
-            
-        ]),
-        'val': transforms.Compose([
-          
-        ]),
-    }
-    
-    # Define transforms on tensor type
-    data_tensor_transform = transforms.Compose([
+    data_transforms = transforms.Compose([
             transforms.ToTensor()
-            # TODO: Normalize data
-        ])
+            ])
     
-    # Create dataset objects
-    image_datasets = {x: MelanomaDataset(os.path.join(dataDir, x),
-                                         data_resize_transform,
-                                         malignant_data_augmentation[x],
-                                         data_tensor_transform)
-    
+    image_datasets = {x: datasets.ImageFolder(os.path.join(dataDir, x),
+                                          data_transforms)
                   for x in ['train', 'test', 'val']}
     
     # Create dataloader objects
