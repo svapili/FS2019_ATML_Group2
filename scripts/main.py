@@ -10,6 +10,7 @@ import time
 import os
 import copy
 import util
+
 from dataSplitter import split
 from loader import melanomaDataLoader, showSample
 from dataAugmenter import preprocessData
@@ -18,16 +19,33 @@ import SimpleNet
 import train
 import test_
 
+import platform
+
 
 if __name__ == '__main__':
-    
+
+    Linux = False
+    Path = ''
+
+    if platform.platform()[0:5] == 'Linux':
+        Linux = True
+        Path = '/var/tmp/'
+
+    # Directories
+if not Linux:
     # Directories
     dataDir = '../data/ISIC-images'
     trainDir = '../data/ISIC-images/train/'
     testDir = '../data/ISIC-images/test/'
     valDir = '../data/ISIC-images/val/'
+else:
+    dataDir = Path + 'ISIC-images'
+    trainDir = Path + 'ISIC-images/train/'
+    testDir = Path + 'ISIC-images/test/'
+    valDir = Path + 'ISIC-images/val/'
 
-    newDataSplit = False # Set to true to split the data randomly again. Data have first to be downloaded and extracted with data_extractor.py
+
+    newDataSplit = True # Set to true to split the data randomly again. Data have first to be downloaded and extracted with data_extractor.py
 
     dataPreprocessing = True # Set to true to resize and augment the data
     

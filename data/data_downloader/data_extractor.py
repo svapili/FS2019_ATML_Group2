@@ -15,8 +15,6 @@ if platform.platform()[0:5] == 'Linux':
     Path = '/var/tmp/'
 
 
-
-
 # Variables
 extractAllZipFiles = True # Set True to extract all zip files. Set False to extract only the first 3 zip files.
 deleteZipFiles = False # Set True to delete all zip files at the end
