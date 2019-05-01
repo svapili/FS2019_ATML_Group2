@@ -1,12 +1,20 @@
 import requests
 import json
 import urllib.parse
+import platform
+
+Linux = False
+Path = ''
+
+if platform.platform()[0:5] == 'Linux':
+    Linux = True
+    Path = '/var/tmp/'
 
 ##################################
 # Modify only those 2 parameters #
 ##################################
 
-nr_images = '5000'  # if you want to download all the images = 23906
+nr_images = '100'  # if you want to download all the images = 23906
 offset_imgs = '0' # if you want to start downloading from a specific image
 nr_imgs_in_zip = 20  # cannot be higher than 300
 
@@ -55,7 +63,7 @@ for img in img_data:
     img_ids.append(id)
 
 # get a file object with write permission
-file_object = open('metadata.json', 'w')
+file_object = open(Path + 'metadata.json', 'w')
 
 # store the information into a json file
 # Save dict data into the JSON file.
@@ -84,9 +92,9 @@ for i in range(0, len(chunks)):
     response_download = requests.get(url_request_download)
 
     # creation of the zip
-    with open('img_' + "{:02d}".format(i) + '.zip', 'wb') as f:
+    with open(Path + 'img_' + "{:02d}".format(i) + '.zip', 'wb') as f:
         f.write(response_download.content)
-        print('img_' + "{:02d}".format(i) + '.zip created.')
+        print(Path + 'img_' + "{:02d}".format(i) + '.zip created.')
     f.close()
 
 

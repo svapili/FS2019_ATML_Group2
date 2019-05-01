@@ -8,9 +8,13 @@ from os import remove
 import platform
 
 Linux = False
+Path = ''
 
 if platform.platform()[0:5] == 'Linux':
     Linux = True
+    Path = '/var/tmp/'
+
+
 
 
 # Variables
@@ -19,11 +23,18 @@ deleteZipFiles = False # Set True to delete all zip files at the end
 deleteIntermediateFolder = False# Set True to delete intermediate folders at the end
 
 # Directories
-zip_file_dir = './'
-image_dir = '../ISIC-images/'
-move_dir = '../ISIC-images/train/'
-benign_dir = '../ISIC-images/train/benign/'
-malignant_dir = '../ISIC-images/train/malignant/'
+if not Linux:
+    zip_file_dir = './'
+    image_dir = '../ISIC-images/'
+    move_dir = '../ISIC-images/train/'
+    benign_dir = '../ISIC-images/train/benign/'
+    malignant_dir = '../ISIC-images/train/malignant/'
+else:
+    zip_file_dir = Path
+    image_dir = Path + 'ISIC-images/'
+    move_dir = Path + '/ISIC-images/train/'
+    benign_dir = Path + '/ISIC-images/train/benign/'
+    malignant_dir = Path + '/ISIC-images/train/malignant/'
 
 
 #######################################
