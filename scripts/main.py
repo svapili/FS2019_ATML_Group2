@@ -110,7 +110,6 @@ else:
     #train_loss, train_accuracy = train.train(model, dataloaders['train'], optimizer, loss_fn, device)
     #val_loss, val_accuracy = test_.test(model, dataloaders['val'], loss_fn, device)
 
-
     for epoch in range(n_epochs):
         train_loss, train_accuracy = train.train(model, dataloaders['train'], optimizer, loss_fn, device)
         val_loss, val_accuracy = test_.test(model, dataloaders['val'], loss_fn, device)
