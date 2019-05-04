@@ -10,8 +10,12 @@ from torchvision import datasets
 def melanomaDataLoader(dataDir):
     
     data_transforms = transforms.Compose([
-            transforms.ToTensor()
-            ])
+            transforms.Resize(250),
+            transforms.ToTensor(),
+            transforms.Normalize(mean=[0.485, 0.456, 0.406],
+                                std=[0.229, 0.224, 0.225])
+
+    ])
     
     image_datasets = {x: datasets.ImageFolder(os.path.join(dataDir, x),
                                           data_transforms)

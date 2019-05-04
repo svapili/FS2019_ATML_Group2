@@ -1,4 +1,5 @@
 import torch
+import numpy as np
 # Define training function
 
 def train(model, train_loader, optimizer, loss_fn, device, print_every=100):
@@ -20,13 +21,14 @@ def train(model, train_loader, optimizer, loss_fn, device, print_every=100):
         optimizer.step()
 
         # DEBUG
-        if iteration % print_every == 0:
-            print('Training iteration {}: loss {:.4f}'.format(iteration, loss.item()))
+        #if iteration % print_every == 0:
+        #    print('Training iteration {}: loss {:.4f}'.format(iteration, loss.item()))
 
         losses.append(loss.item())
         n_correct += torch.sum(output.argmax(1) == labels).item()
 
     # plt.plot(losses)
     accuracy = 100.0 * n_correct / len(train_loader.dataset)
+    print(len(train_loader.dataset))
 
     return np.mean(np.array(losses)), accuracy

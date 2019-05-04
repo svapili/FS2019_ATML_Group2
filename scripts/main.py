@@ -1,6 +1,7 @@
 import torch
 import torch.nn as nn
 import torch.optim as optim
+import torchvision.models as models
 from torch.optim import lr_scheduler
 import numpy as np
 import torchvision
@@ -45,10 +46,12 @@ else:
     valDir = Path + 'ISIC-images/val/'
 
 
-    newDataSplit = True # Set to true to split the data randomly again. Data have first to be downloaded and extracted with data_extractor.py
+    newDataSplit = False # Set to true to split the data randomly again. Data have first to be downloaded and extracted with data_extractor.py
 
-    dataPreprocessing = True # Set to true to resize and augment the data
-    
+    dataPreprocessing = False # Set to true to resize and augment the data
+
+    n_epochs = 10
+
 ######################
 # Splitting the data #
 ######################
@@ -87,7 +90,11 @@ else:
     # Learning rate config
     learning_rate = 0.001
 
-    model = SimpleNet.ConvNet()
+    #model
+    #model = SimpleNet.ConvNet()
+    model = models.AlexNet(num_classes=2)
+
+
     model = model.to(device)
 
     # optimizer definition
@@ -100,5 +107,20 @@ else:
     val_losses, val_accuracies = [], []
 
     # test train and test function
-    train_loss, train_accuracy = train.train(model, dataloaders['train'], optimizer, loss_fn, device)
-    val_loss, val_accuracy = test_.test(model, dataloaders['val'], loss_fn, device)
+    #train_loss, train_accuracy = train.train(model, dataloaders['train'], optimizer, loss_fn, device)
+    #val_loss, val_accuracy = test_.test(model, dataloaders['val'], loss_fn, device)
+
+
+    for epoch in range(n_epochs):
+        train_loss, train_accuracy = train.train(model, dataloaders['train'], optimizer, loss_fn, device)
+        val_loss, val_accuracy = test_.test(model, dataloaders['val'], loss_fn, device)
+        train_losses.append(train_loss)
+        train_accuracies.append(train_accuracy)
+        val_losses.append(val_loss)
+        val_accuracies.append(val_accuracy)
+        print('Epoch {}/{}: train_loss: {:.4f}, train_accuracy: {:.4f}, val_loss: {:.4f}, val_accuracy: {:.4f}'.format(
+            epoch + 1, n_epochs,
+            train_losses[-1],
+            train_accuracies[-1],
+            val_losses[-1],
+            val_accuracies[-1]))
