@@ -11,6 +11,8 @@ import time
 import os
 import copy
 import util
+import csv
+import glob
 
 from dataSplitter import split
 from loader import melanomaDataLoader, showSample
@@ -45,12 +47,23 @@ else:
     testDir = Path + 'ISIC-images/test/'
     valDir = Path + 'ISIC-images/val/'
 
+#######################
 
+#######################
     newDataSplit = False # Set to true to split the data randomly again. Data have first to be downloaded and extracted with data_extractor.py
 
     dataPreprocessing = False # Set to true to resize and augment the data
 
     n_epochs = 10
+
+    my_path = os.path.abspath(os.path.dirname(__file__))
+    dir = os.path.dirname(my_path)
+    results_dir = dir + '/results'
+    modelstate_dir = dir + '/modelstate'
+    if not os.path.exists(results_dir):
+        os.makedirs(results_dir)
+    if not os.path.exists(modelstate_dir):
+        os.makedirs(modelstate_dir)
 
 ######################
 # Splitting the data #
@@ -81,7 +94,7 @@ else:
     
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
         
-    showSample(dataloaders, dataset_sizes, class_names)
+    #showSample(dataloaders, dataset_sizes, class_names)
     
 ##############################
 # Configuring Network        #
@@ -103,12 +116,17 @@ else:
     # loss function
     loss_fn = nn.CrossEntropyLoss()
 
-    train_losses, train_accuracies = [], []
-    val_losses, val_accuracies = [], []
+    train_losses, train_accuracies = ['train_losses'], ['train_accuracies']
+    val_losses, val_accuracies = ['val_losses'], ['val_accuracies']
 
     # test train and test function
     #train_loss, train_accuracy = train.train(model, dataloaders['train'], optimizer, loss_fn, device)
     #val_loss, val_accuracy = test_.test(model, dataloaders['val'], loss_fn, device)
+
+    ##############################
+    # Training Epochs            #
+    ##############################
+    config  = model._get_name() #+ optimizer.__str__()
 
     for epoch in range(n_epochs):
         train_loss, train_accuracy = train.train(model, dataloaders['train'], optimizer, loss_fn, device)
@@ -123,3 +141,35 @@ else:
             train_accuracies[-1],
             val_losses[-1],
             val_accuracies[-1]))
+
+    ##############################
+    # Saving results             #
+    ##############################
+
+        if epoch % 5 == 0 and epoch is not 0:
+            print('...saving...')
+            name = config + '_Epoch_'
+
+            #remove old results
+            for filename in glob.glob(results_dir + '/' + name + '*'):
+                os.remove(filename)
+            for filename in glob.glob(modelstate_dir + '/' + name + '*'):
+                os.remove(filename)
+
+            name = config + '_Epoch_' + str(epoch)
+
+            # save model weights
+            torch.save(model.state_dict(), modelstate_dir + '/' + name + '.pth')
+
+            # save results per epoch
+            path = results_dir + '/' + name + '.csv'
+            with open(path, 'a') as csvFile:
+                writer = csv.writer(csvFile)
+                writer.writerow(train_losses)
+                writer.writerow(train_accuracies)
+                writer.writerow(val_losses)
+                writer.writerow(val_accuracies)
+            csvFile.close()
+
+
+
