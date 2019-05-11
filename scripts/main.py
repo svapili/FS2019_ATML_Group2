@@ -48,13 +48,16 @@ else:
     valDir = Path + 'ISIC-images/val/'
 
 #######################
-
+# Config
 #######################
     newDataSplit = False # Set to true to split the data randomly again. Data have first to be downloaded and extracted with data_extractor.py
-
     dataPreprocessing = False # Set to true to resize and augment the data
-
+    # Learning rate config
+    learning_rate = 0.001
     n_epochs = 10
+    first_training_status = True
+
+
 
     my_path = os.path.abspath(os.path.dirname(__file__))
     dir = os.path.dirname(my_path)
@@ -100,8 +103,6 @@ else:
 # Configuring Network        #
 ##############################
 
-    # Learning rate config
-    learning_rate = 0.001
 
     #model
     #model = SimpleNet.ConvNet()
@@ -120,8 +121,17 @@ else:
     val_losses, val_accuracies = ['val_losses'], ['val_accuracies']
 
     # test train and test function
-    #train_loss, train_accuracy = train.train(model, dataloaders['train'], optimizer, loss_fn, device)
-    #val_loss, val_accuracy = test_.test(model, dataloaders['val'], loss_fn, device)
+    if first_training_status is True:
+        train_loss, train_accuracy = train.train(model, dataloaders['train'], optimizer, loss_fn, device, status = True)
+        val_loss, val_accuracy = test_.test(model, dataloaders['val'], loss_fn, device)
+        test_loss, test_accuracy = test_.test(model, dataloaders['test'], loss_fn, device)
+        print('Test training: train_loss: {:.4f}, train_accuracy: {:.4f}, val_loss: {:.4f}, val_accuracy: {:.4f}, test_loss: {:.4f}, test_accuracy: {:.4f}'.format(
+            train_loss,
+            train_accuracy,
+            val_loss,
+            val_accuracy,
+            test_loss,
+            test_accuracy))
 
     ##############################
     # Training Epochs            #
@@ -148,7 +158,7 @@ else:
 
         if epoch % 5 == 0 and epoch is not 0:
             print('...saving...')
-            name = config + '_Epoch_'
+            name = config + '_' + loss_fn.__str__() + '_lr=' + str(learning_rate) + '_' +(optimizer.__str__()).split(' ')[0]
 
             #remove old results
             for filename in glob.glob(results_dir + '/' + name + '*'):
@@ -156,7 +166,7 @@ else:
             for filename in glob.glob(modelstate_dir + '/' + name + '*'):
                 os.remove(filename)
 
-            name = config + '_Epoch_' + str(epoch)
+            name = name + '_Epoch_' + str(epoch)
 
             # save model weights
             torch.save(model.state_dict(), modelstate_dir + '/' + name + '.pth')
