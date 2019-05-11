@@ -33,19 +33,24 @@ def melanomaDataLoader(dataDir):
 # Display some sample pictures
 def showSample(dataloaders, dataset_sizes, class_names):
     
-    plt.figure()
+    plt.figure(figsize = (10,5))
     
     for i in range(0, 10):
-        
+                
         # Get random image in training set
         index = np.random.choice(dataset_sizes['train'])
         img =  dataloaders['train'].dataset[index][0]
+        
         imgClass =  dataloaders['train'].dataset[index][1]
                 
-        # Transform image before display
-        img = img.numpy().transpose(1,2,0)
-        
+        # Transform image before display        
+        inp = img.numpy().transpose(1, 2, 0)
+        mean = np.array([0.485, 0.456, 0.406])
+        std = np.array([0.229, 0.224, 0.225])
+        inp = std * inp + mean
+        inp = np.clip(inp, 0, 1)
+                
         # Display image
         plt.subplot(2,5,i+1)
-        plt.imshow(img)
+        plt.imshow(inp)
         plt.title('Class: {}'.format(class_names[imgClass]))
