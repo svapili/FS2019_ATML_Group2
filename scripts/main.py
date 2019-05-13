@@ -26,6 +26,7 @@ import platform
 
 
 if __name__ == '__main__':
+    
 
     Linux = False
     Path = ''
@@ -35,17 +36,17 @@ if __name__ == '__main__':
         Path = '/var/tmp/'
 
     # Directories
-if not Linux:
-    # Directories
-    dataDir = '../data/ISIC-images'
-    trainDir = '../data/ISIC-images/train/'
-    testDir = '../data/ISIC-images/test/'
-    valDir = '../data/ISIC-images/val/'
-else:
-    dataDir = Path + 'ISIC-images'
-    trainDir = Path + 'ISIC-images/train/'
-    testDir = Path + 'ISIC-images/test/'
-    valDir = Path + 'ISIC-images/val/'
+    if not Linux:
+        # Directories
+        dataDir = '../data/ISIC-images'
+        trainDir = '../data/ISIC-images/train/'
+        testDir = '../data/ISIC-images/test/'
+        valDir = '../data/ISIC-images/val/'
+    else:
+        dataDir = Path + 'ISIC-images'
+        trainDir = Path + 'ISIC-images/train/'
+        testDir = Path + 'ISIC-images/test/'
+        valDir = Path + 'ISIC-images/val/'
 
 #######################
 # Config
@@ -82,8 +83,10 @@ else:
 # Preprocessing the data (resizing and augmenting) #
 ####################################################
     if (dataPreprocessing):
-        
-        preprocessData([trainDir, testDir, valDir])
+                
+        preprocessData(directories=[trainDir, testDir, valDir], 
+                       outSize=(300,250),
+                       keepAspectRatio=True)
         
 ##############################
 # Creating DataLoader object #
@@ -97,7 +100,7 @@ else:
     
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
         
-    #showSample(dataloaders, dataset_sizes, class_names)
+    showSample(dataloaders, dataset_sizes, class_names)
     
 ##############################
 # Configuring Network        #
