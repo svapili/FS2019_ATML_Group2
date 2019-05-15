@@ -7,7 +7,7 @@ from torchvision import datasets
 
 
 # Create dataset and dataloader objects
-def melanomaDataLoader(dataDir):
+def melanomaDataLoader(dataDir, batch_size=32, num_workers=4):
     
     data_transforms = transforms.Compose([
             transforms.Resize(250),
@@ -22,8 +22,8 @@ def melanomaDataLoader(dataDir):
                   for x in ['train', 'test', 'val']}
     
     # Create dataloader objects
-    dataloaders = {x: torch.utils.data.DataLoader(image_datasets[x], batch_size=32,
-                                                 shuffle=True, num_workers=2)
+    dataloaders = {x: torch.utils.data.DataLoader(image_datasets[x], batch_size=batch_size,
+                                                 shuffle=True, num_workers=num_workers)
 
                   for x in ['train', 'test', 'val']}
     

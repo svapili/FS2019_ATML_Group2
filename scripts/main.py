@@ -109,7 +109,7 @@ if __name__ == '__main__':
 
     #model
     #model = SimpleNet.ConvNet()
-    model = models.AlexNet(num_classes=2)
+    model = models.vgg16(num_classes=2)
 
 
     model = model.to(device)
@@ -139,11 +139,11 @@ if __name__ == '__main__':
     ##############################
     # Training Epochs            #
     ##############################
-    config  = model._get_name() #+ optimizer.__str__()
+    config  = model._get_name() + " " + optimizer.__str__()
 
     for epoch in range(n_epochs):
         train_loss, train_accuracy = train.train(model, dataloaders['train'], optimizer, loss_fn, device)
-        val_loss, val_accuracy = test_.test(model, dataloaders['val'], loss_fn, device)
+        val_loss, val_accuracy = test_.test(model, dataloaders['val'], loss_fn, device) 
         train_losses.append(train_loss)
         train_accuracies.append(train_accuracy)
         val_losses.append(val_loss)

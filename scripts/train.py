@@ -34,7 +34,10 @@ def train(model, train_loader, optimizer, loss_fn, device, print_every=10, statu
             n_sample_0 += torch.sum(output.argmax(1) == 0).item()
             n_sample_1 += torch.sum(output.argmax(1) == 1).item()
             n_sample = n_sample_0+n_sample_1
-            accuracy = 100.0 * n_correct / n_sample
+            if(n_sample>0):
+                accuracy = 100.0 * n_correct / n_sample
+            else:
+                accuracy = np.inf
 
             print('Training iteration {}: loss {:.4f}, accuracy {:.4f}'.format(iteration, loss.item(), accuracy))
             print('# 0 output: {}, # 1 output: {}'.format(n_sample_0,n_sample_1))

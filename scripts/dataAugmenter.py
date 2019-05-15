@@ -88,7 +88,6 @@ def clearAugmented(dir):
 
 # Resize and augment data from the given directories
 def preprocessData(directories, outSize=(300,300), keepAspectRatio=False):
-    
+   
     for directory in directories:
         resizeData(directory, outSize, keepAspectRatio)
-        augmentMalignant(directory)    
