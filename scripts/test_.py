@@ -2,10 +2,12 @@ import torch
 #from sklearn.metrics import f1_score, balanced_accuracy_score
 
 # Define testing function
-def test(model, test_loader, loss_fn, device):
+def test(model, test_loader, loss_fn, device, balance=0.5):
     '''
     Tests the model on data from test_loader
     '''
+    print("Balance is :", balance)
+    
     model.eval()
     test_loss = 0
     n_correct = 0
@@ -16,7 +18,10 @@ def test(model, test_loader, loss_fn, device):
     n_FP = 0
     n_FN = 0
 
-
+    printout = True
+    
+    balance_class1 = balance
+    balance_class2 = 1-balance
 
     with torch.no_grad():
         for images, labels in test_loader:
@@ -24,7 +29,21 @@ def test(model, test_loader, loss_fn, device):
             labels = labels.to(device)
             output = model(images)
             loss = loss_fn(output, labels)
-
+            '''
+            print(output.shape)
+            if printout is True:
+                print(output[:,0])
+                print(output[:,1])
+                print(output[:,2])
+                print(output[:,3])
+            printout = False
+            '''
+            
+            if balance is not 0.5:
+                output[:,0] = (output[:,0]+1)*balance_class1
+                output[:,1] = (output[:,1]+1)*balance_class2
+            
+            
             _, predicted = torch.max(output.data,1)
 
             test_loss += loss.item()
