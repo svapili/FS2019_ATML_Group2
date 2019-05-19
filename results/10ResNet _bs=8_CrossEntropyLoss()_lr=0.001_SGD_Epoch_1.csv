@@ -1,0 +1,10 @@
+train_losses,0.5533962249755859
+train_accuracies,0.08792313006343026
+val_losses,0.44603668247682476
+val_accuracies,88.57466063348416
+learning_rate,0.001
+execution time,7.063787937164307
+True Positives,1
+True Negatives,1565
+False Positives,3
+False Negatives,199

@@ -12,7 +12,7 @@ def setup_optimizer(model, learning_rate=0.001, optimizer_name="Adam", pretraine
         num_classes=2
         if model.__class__.__name__ == "ResNet":
             #ft_model = model
-            num_ftrs = ft_model.fc.in_features  
+            num_ftrs = model.fc.in_features  
             set_parameter_requires_grad(model, finetune)
             model.fc = nn.Linear(num_ftrs, num_classes)
             params_to_update = model.parameters()
