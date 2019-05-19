@@ -32,6 +32,8 @@ import platform
 
 if platform.platform()[0:5] == 'Linux':
     Linux = True
+else:
+    Linux = False
 
 # Create directory structure and puts all images in the train folder if they
 # were already split.

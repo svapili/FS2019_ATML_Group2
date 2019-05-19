@@ -10,7 +10,7 @@ def train(model, train_loader, optimizer, loss_fn, device, print_every=10, statu
     n_sample_0 = 0
     n_sample_1 = 0
     iteration = 0
-    print("lenght of dataset :",len(train_loader.dataset))
+    print("length of dataset :",len(train_loader.dataset))
     for iter, (images, labels) in enumerate(train_loader):
         images = images.to(device)
         labels = labels.to(device)
