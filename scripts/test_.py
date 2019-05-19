@@ -6,7 +6,12 @@ def test(model, test_loader, loss_fn, device, balance=0.5):
     '''
     Tests the model on data from test_loader
     '''
-    print("Balance is :", balance)
+    
+    if balance is 0.5:
+        print("not weighted")
+    else:
+        print("balance is ", balance)
+        
     
     model.eval()
     test_loss = 0
@@ -40,8 +45,8 @@ def test(model, test_loader, loss_fn, device, balance=0.5):
             '''
             
             if balance is not 0.5:
-                output[:,0] = (output[:,0]+1)*balance_class1
-                output[:,1] = (output[:,1]+1)*balance_class2
+                output[:,0] = (output[:,0]+100)*balance_class1
+                output[:,1] = (output[:,1]+100)*balance_class2
             
             
             _, predicted = torch.max(output.data,1)
