@@ -34,10 +34,13 @@ def resizeData(path, outSize=(300,300), keepAspectRatio=False):
                     resizedImg = resize(img)
                     resizedImg.save(imgPath)
 
-    print('Done!')           
+    print('Done!')    
+       
 
-                
-# Augment malignant images of the given directory
+'''
+Augment the number of malignant images in the given directory
+dir: the path to the train, test or val directory
+'''          
 def augmentMalignant(dir):
     
     subDir = 'malignant/'
@@ -64,7 +67,7 @@ def augmentMalignant(dir):
             for imgPath in imgPathList:
                 os.remove(imgPath)
         
-        # Augment data by flipping (4 times more)
+        # Augment data by flipping (4x more images)
         imgPathList = glob.glob(dir + subDir + '*.jpg')
         for imgPath in imgPathList:
             file, ext = os.path.splitext(imgPath)
@@ -74,7 +77,7 @@ def augmentMalignant(dir):
                 destination = file + '_' + str(index) + ext
                 augmentedImg.save(destination)
         
-        # Augment data
+        # Augment data by rotating them randomly (2x more images)
         imgPathList = glob.glob(dir + subDir + '*.jpg')
         for imgPath in imgPathList:
             file, ext = os.path.splitext(imgPath)
@@ -85,9 +88,12 @@ def augmentMalignant(dir):
                 augmentedImg.save(destination)        
         
         print('Done!')
-  
-
-# Erase augmented images, i.e. images ending in '*_[0-9].jpg'     
+ 
+    
+'''
+Erase augmented images, i.e. images ending in '*_[0-9].jpg' 
+dir: the path to the train, test or val directory
+'''  
 def clearAugmented(dir):
     
     subDir = 'malignant/'
@@ -99,7 +105,13 @@ def clearAugmented(dir):
             os.remove(imgPath)
 
 
-# Resize and augment data from the given directories
+'''
+Resize and augment data from the given directories
+directories: a list of paths to the train, test and val directories
+outSize: a tuple holding the dimensions of the resized image. E.g. (300,200)
+keepAspectRatio: a boolean saying if the image aspect ratio has to be kept. In
+                 that case, black padding are added to the image.
+'''
 def preprocessData(directories, outSize=(300,300), keepAspectRatio=False):
    
     for directory in directories:

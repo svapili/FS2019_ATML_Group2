@@ -1,18 +1,28 @@
 import torch
-#from sklearn.metrics import f1_score, balanced_accuracy_score
 
-# Define testing function
+'''
+Test the model on the given test or validation set
+Args
+model:       the model we want to evaluate
+test_loader: a dataloader object for the test set
+loss_fn:     the loss function to use
+device:      the device to use (CPU or cuda)
+balance:     the threshold to assign the output to one class or the other
+Return
+average_loss: the average loss
+accuracy:     the average accuracy
+n_TP:         the number of True Positive classifications
+n_TN:         the number of True Negative classifications
+n_FP:         the number of False Positive classifications
+n_FN:         the number of False Negative classifications
+'''
 def test(model, test_loader, loss_fn, device, balance=0.5):
-    '''
-    Tests the model on data from test_loader
-    '''
     
     if balance is 0.5:
         print("not weighted")
     else:
         print("balance is ", balance)
-        
-    
+          
     model.eval()
     test_loss = 0
     n_correct = 0
@@ -22,8 +32,6 @@ def test(model, test_loader, loss_fn, device, balance=0.5):
     n_TN = 0
     n_FP = 0
     n_FN = 0
-
-    printout = True
     
     balance_class1 = balance
     balance_class2 = 1-balance
@@ -34,15 +42,6 @@ def test(model, test_loader, loss_fn, device, balance=0.5):
             labels = labels.to(device)
             output = model(images)
             loss = loss_fn(output, labels)
-            '''
-            print(output.shape)
-            if printout is True:
-                print(output[:,0])
-                print(output[:,1])
-                print(output[:,2])
-                print(output[:,3])
-            printout = False
-            '''
             
             if balance is not 0.5:
                 output[:,0] = (output[:,0]+100)*balance_class1
@@ -55,8 +54,7 @@ def test(model, test_loader, loss_fn, device, balance=0.5):
             out_argmax = output.argmax(1)
 
             n_correct += torch.sum(out_argmax == labels).item()
-            #n_correct += np.sum(output.argmax(1).numpy()==labels.numpy())
-
+            
             n_true_output += torch.sum(out_argmax == 1).item()
             n_false_ouput += torch.sum(out_argmax == 0).item()
 
@@ -66,9 +64,7 @@ def test(model, test_loader, loss_fn, device, balance=0.5):
             n_FN += torch.sum((labels == 1) * (out_argmax == 0)).item()
 
 
-
     average_loss = test_loss / len(test_loader)
     accuracy = 100.0 * n_correct / len(test_loader.dataset)
 
-#   print('Test average loss: {:.4f}, accuracy: {:.3f}'.format(average_loss, accuracy))
     return average_loss, accuracy, n_TP, n_TN, n_FP, n_FN

@@ -1,19 +1,30 @@
 import os
-import copy
 import csv
 import glob
-import numpy as np
 import matplotlib.pyplot as plt
 import torch
-        
+
+'''
+Show the given input image
+inp:    the image to show
+title:  the title to display
+'''
 def imshow(inp, title=None):
     """Imshow for Tensor."""
     plt.imshow(inp)
     if title is not None:
         plt.title(title)
     plt.pause(0.001)  # pause a bit so that plots are updated
-    
 
+
+'''
+A function for saving results
+Args
+epoch:  the number of epochs
+config: the model used
+loss_fn: the loss function used
+...
+'''
 def save_results(epoch, config, loss_fn, learning_rate, optimizer, path_idx, results_dir, modelstate_dir, 
                  pretrained, model_idx, model, train_losses, train_accuracies, val_losses, val_accuracies, learn_rates,
                  time_epoch, TPs, TNs, FPs, FNs):

@@ -2,7 +2,9 @@ from torchvision import models
 from torch import nn
 import torch.nn.functional as F
 
-
+'''
+A simple convnet class for early testing
+'''
 class ConvNet(nn.Module):
     def __init__(self):
         super(ConvNet, self).__init__()

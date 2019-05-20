@@ -1,7 +1,20 @@
 import torch
 import numpy as np
-# Define training function
 
+'''
+Train the model on the given train set for one epoch
+Args
+model:       the model we want to train
+train_loader:a dataloader object for the train set
+optimizer:   the optimizer to use
+loss_fn:     the loss function to use
+device:      the device to use (CPU or cuda)
+print_every: a boolean telling when to print infos
+status:      a boolean indicating debug mode
+Return
+np.mean(np.array(losses)):  the average loss
+accuracy:                   the average accuracy
+'''
 def train(model, train_loader, optimizer, loss_fn, device, print_every=10, status = False):
     model.train()
     losses = []
@@ -15,11 +28,6 @@ def train(model, train_loader, optimizer, loss_fn, device, print_every=10, statu
         images = images.to(device)
         labels = labels.to(device)
         output = model(images)
-        '''
-        print(train_loader.batch_size)
-        print(labels.size())
-        print(output.shape)
-        '''
         optimizer.zero_grad()
         loss = loss_fn(output, labels)
         loss.backward()
@@ -27,7 +35,6 @@ def train(model, train_loader, optimizer, loss_fn, device, print_every=10, statu
 
         losses.append(loss.item())
         n_correct += torch.sum(output.argmax(1) == labels).item()
-
 
         # DEBUG
         if status is True:
@@ -45,7 +52,6 @@ def train(model, train_loader, optimizer, loss_fn, device, print_every=10, statu
 
         iteration += 1
 
-    # plt.plot(losses)
     accuracy = 100.0 * n_correct / len(train_loader.dataset)
 
     return np.mean(np.array(losses)), accuracy

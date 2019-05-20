@@ -4,9 +4,17 @@ from torchvision import transforms
 import matplotlib.pyplot as plt
 import numpy as np
 from torchvision import datasets
-
-
-# Create dataset and dataloader objects
+ 
+'''
+Create dataset and dataloader objects
+Args
+dataDir:     a list of paths to the train, test and val directories
+batch_size:  the batch size
+num_workers: the number of workers
+Return
+image_datasets: the dataset objects
+dataloaders:    the dataloader objects
+'''
 def melanomaDataLoader(dataDir, batch_size=32, num_workers=4):
     
     data_transforms = transforms.Compose([
@@ -30,7 +38,12 @@ def melanomaDataLoader(dataDir, batch_size=32, num_workers=4):
     return image_datasets, dataloaders
 
 
-# Display some sample pictures
+'''
+Display some sample pictures
+dataloaders:    a list of dataloader objects
+dataset_sizes:  a list of the datasets sizes
+class_names:    a list of the image classes
+'''
 def showSample(dataloaders, dataset_sizes, class_names):
     
     plt.figure(figsize = (10,5))
