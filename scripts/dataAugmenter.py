@@ -44,13 +44,15 @@ def augmentMalignant(dir):
     
     print('Augmenting malignant class...')
     
-    augmentations = [transforms.RandomHorizontalFlip(p=1.0),
+    flip_augmentations = [transforms.RandomHorizontalFlip(p=1.0),
                      transforms.RandomVerticalFlip(p=1.0),
                      transforms.Compose([
                              transforms.RandomHorizontalFlip(p=1.0),
                              transforms.RandomVerticalFlip(p=1.0)
                              ])
-                    ]   
+                    ]
+                     
+    rotate_augmentation = [transforms.RandomRotation(45)]
 
     if not os.path.exists(dir+subDir):
         print("Folder doesn't exist, try splitting the data again")
@@ -62,15 +64,26 @@ def augmentMalignant(dir):
             for imgPath in imgPathList:
                 os.remove(imgPath)
         
+        # Augment data by flipping (4 times more)
+        imgPathList = glob.glob(dir + subDir + '*.jpg')
+        for imgPath in imgPathList:
+            file, ext = os.path.splitext(imgPath)
+            img = Image.open(imgPath)
+            for index, augmentation in enumerate(flip_augmentations):
+                augmentedImg = augmentation(img)
+                destination = file + '_' + str(index) + ext
+                augmentedImg.save(destination)
+        
         # Augment data
         imgPathList = glob.glob(dir + subDir + '*.jpg')
         for imgPath in imgPathList:
             file, ext = os.path.splitext(imgPath)
             img = Image.open(imgPath)
-            for index, augmentation in enumerate(augmentations):
+            for index, augmentation in enumerate(rotate_augmentation):
                 augmentedImg = augmentation(img)
                 destination = file + '_' + str(index) + ext
                 augmentedImg.save(destination)        
+        
         print('Done!')
   
 
@@ -91,3 +104,4 @@ def preprocessData(directories, outSize=(300,300), keepAspectRatio=False):
    
     for directory in directories:
         resizeData(directory, outSize, keepAspectRatio)
+        augmentMalignant(directory)
