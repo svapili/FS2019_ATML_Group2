@@ -1,23 +1,31 @@
 # Folder description
 
-This folder contains all the python scripts needed for training and testing a model on the melanoma dataset.
+This folder contains all the python scripts needed for training and testing a model on the melanoma dataset. See FS2019_ATML_group2.ipynb for more info.
 
-## main.py
+## FS2019_ATML_group2.ipynb
 
 Entry point of the application.
 
-## model.py
+## dataAugmenter.py
 
-Define all the models we want to try.
+Define augmentation and resize transforms.
+
+## dataSplitter.py
+
+Define function for splitting the data.
+
+## loader.py
+
+Create dataloader and dataset objects
+
+## optimize.py
+
+Setup the optimizer
 
 ## train.py
 
 Define the training function.
 
-## test.py
+## test_.py
 
 Define the testing function.
-
-## util.py
-
-Define auxiliary functions.
